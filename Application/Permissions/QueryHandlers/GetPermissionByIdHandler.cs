@@ -2,7 +2,7 @@
 using Application.Permissions.Queries;
 using AutoMapper;
 using Common.Exceptions;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +10,10 @@ namespace Application.Permissions.QueryHandlers
 {
     public class GetPermissionByIdHandler : IRequestHandler<GetPermissionById, PermissionDto>
     {
-        private BanHangContext _context;
+        private AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetPermissionByIdHandler(BanHangContext context, IMapper mapper)
+        public GetPermissionByIdHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

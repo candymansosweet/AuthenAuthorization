@@ -1,7 +1,7 @@
 ﻿using Application.Permissions.Dto;
 using Application.Permissions.Queries;
 using AutoMapper;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +9,10 @@ namespace Application.Permissions.QueryHandlers
 {
     public class FilterPermissionHandler : IRequestHandler<FilterPermission, List<PermissionDto>>
     {
-        private BanHangContext _context;
+        private AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public FilterPermissionHandler(BanHangContext context, IMapper mapper)
+        public FilterPermissionHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

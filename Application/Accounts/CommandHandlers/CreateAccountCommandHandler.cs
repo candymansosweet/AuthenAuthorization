@@ -3,17 +3,17 @@ using Application.Accounts.Dto;
 using AutoMapper;
 using Common.Exceptions;
 using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 
 namespace Application.Accounts.CommandHandlers
 {
     public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, AccountDto>
     {
-        private readonly BanHangContext _context;
+        private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public CreateAccountCommandHandler(BanHangContext context, IMapper mapper)
+        public CreateAccountCommandHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

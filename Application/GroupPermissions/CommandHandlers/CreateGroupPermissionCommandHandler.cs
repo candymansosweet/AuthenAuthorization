@@ -3,17 +3,17 @@ using Application.GroupPermissions.Dto;
 using AutoMapper;
 using Common.Exceptions;
 using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 
 namespace Application.GroupPermissions.CommandHandlers
 {
     public class CreateGroupPermissionCommandHandler : IRequestHandler<CreateGroupPermissionCommand, GroupPermissionDto>
     {
-        private readonly BanHangContext _context;
+        private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public CreateGroupPermissionCommandHandler(BanHangContext context, IMapper mapper)
+        public CreateGroupPermissionCommandHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

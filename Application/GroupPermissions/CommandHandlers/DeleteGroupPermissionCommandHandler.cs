@@ -2,7 +2,7 @@
 using Application.GroupPermissions.Dto;
 using AutoMapper;
 using Common.Exceptions;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,10 +14,10 @@ namespace Application.GroupPermissions.CommandHandlers
 {
     public class DeleteGroupPermissionCommandHandler : IRequestHandler<DeleteGroupPermissionCommand, GroupPermissionDto>
     {
-        private readonly BanHangContext _context;
+        private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public DeleteGroupPermissionCommandHandler(BanHangContext context, IMapper mapper)
+        public DeleteGroupPermissionCommandHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -3,7 +3,7 @@ using Application.Permissions.Dto;
 using AutoMapper;
 using Common.Exceptions;
 using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +11,10 @@ namespace Application.Permissions.CommandHandlers
 {
     public class UpdatePermissionCommandHandler : IRequestHandler<UpdatePermissionCommand, PermissionDto>
     {
-        private BanHangContext _context;
+        private AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public UpdatePermissionCommandHandler(BanHangContext context, IMapper mapper)
+        public UpdatePermissionCommandHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

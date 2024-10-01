@@ -1,7 +1,7 @@
 ﻿using Application.GroupPermissions.Dto;
 using Application.GroupPermissions.Queries;
 using AutoMapper;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,10 +13,10 @@ namespace Application.GroupPermissions.QueryHandlers
 {
     public class FilterGroupPermissionHandler : IRequestHandler<FilterGroupPermission, List<GroupPermissionDto>>
     {
-        private readonly BanHangContext _context;
+        private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public FilterGroupPermissionHandler(BanHangContext context, IMapper mapper)
+        public FilterGroupPermissionHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

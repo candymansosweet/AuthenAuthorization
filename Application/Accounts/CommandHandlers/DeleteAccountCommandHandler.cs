@@ -4,7 +4,7 @@ using Application.Accounts.Dto;
 using AutoMapper;
 using Common.Exceptions;
 using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -16,10 +16,10 @@ namespace Application.Accounts.CommandHandlers
 {
     public class DeleteAccountCommandHandler : IRequestHandler<DeleteAccountCommand, AccountDto>
     {
-        private BanHangContext _context;
+        private AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public DeleteAccountCommandHandler(BanHangContext context, IMapper mapper)
+        public DeleteAccountCommandHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

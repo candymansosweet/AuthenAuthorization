@@ -1,7 +1,7 @@
 ﻿using Application.Accounts.Dto;
 using Application.Accounts.Queries;
 using AutoMapper;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +9,10 @@ namespace Application.Accounts.QueryHandlers
 {
     public class FilterAccountHandler : IRequestHandler<FilterAccount, List<AccountDto>>
     {
-        private readonly BanHangContext _context;
+        private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public FilterAccountHandler(BanHangContext context, IMapper mapper)
+        public FilterAccountHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

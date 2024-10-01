@@ -2,7 +2,7 @@
 using Application.GroupPermissions.Queries;
 using AutoMapper;
 using Common.Exceptions;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,10 +14,10 @@ namespace Application.GroupPermissions.QueryHandlers
 {
     public class GetGroupPermissionByIdHandler : IRequestHandler<GetGroupPermissionById, GroupPermissionDto>
     {
-        private readonly BanHangContext _context;
+        private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetGroupPermissionByIdHandler(BanHangContext context, IMapper mapper)
+        public GetGroupPermissionByIdHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

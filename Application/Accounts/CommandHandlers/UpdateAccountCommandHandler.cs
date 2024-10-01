@@ -3,7 +3,7 @@ using Application.Accounts.Dto;
 using AutoMapper;
 using Common.Exceptions;
 using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,10 +12,10 @@ namespace Application.Accounts.CommandHandlers
 {
     public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand, AccountDto>
     {
-        private readonly BanHangContext _context;
+        private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public UpdateAccountCommandHandler(BanHangContext context, IMapper mapper)
+        public UpdateAccountCommandHandler(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
