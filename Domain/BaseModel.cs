@@ -8,10 +8,5 @@
         public int CreatedBy { get; set; }
         public int UpdatedBy { get; set; }
         public bool IsDeleted { get; set; }
-        public void Delete()
-        {
-            IsDeleted = true;
-            UpdatedDate = DateTime.Now;
-        }
     }
 }

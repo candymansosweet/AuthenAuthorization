@@ -1,8 +1,10 @@
-﻿using Domain.Entities;
+﻿using Domain;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Persistence
 {
@@ -17,13 +19,32 @@ namespace Infrastructure.Persistence
         {
 
         }
-        // ghi đè để trước khi lưu data, cập nhật ngày tháng
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Áp dụng Global Query Filter cho tất cả các entity kế thừa từ BaseModel
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes()) // lấy tất cả các entities được định nghĩa hoặc liên quan trong DbSet
+            {
+                if (typeof(BaseModel).IsAssignableFrom(entityType.ClrType)) // chỉ áp dụng với các class kế thừa từ BaseModel
+                {
+                    var parameter = Expression.Parameter(entityType.ClrType, "e"); // 
+                    var propertyMethod = typeof(EF).GetMethod("Property").MakeGenericMethod(typeof(bool));
+                    var isDeletedProperty = Expression.Call(propertyMethod, parameter, Expression.Constant("IsDeleted"));
+                    var compareExpression = Expression.Equal(isDeletedProperty, Expression.Constant(false));
+                    var lambda = Expression.Lambda(compareExpression, parameter);
+                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+                    //IgnoreQueryFilters
+                }
+            }
+        }
+        // ghi đè để trước khi lưu data, cập nhật ngày tháng, xóa cứng chuyển sang xóa mềm
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             OnBeforeSaving();
             return base.SaveChangesAsync(cancellationToken);
         }
-        private void OnBeforeSaving() // function your's define
+        private void OnBeforeSaving() 
         {
             try
             {
@@ -48,6 +69,10 @@ namespace Infrastructure.Persistence
                         case EntityState.Unchanged:
                             break;
                         case EntityState.Deleted:
+                            // Thực hiện xóa mềm
+                            entry.State = EntityState.Modified;
+                            entry.Property("IsDeleted").CurrentValue = true;
+                            entry.Property("UpdatedDate").CurrentValue = utcNow;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

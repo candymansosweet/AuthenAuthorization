@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
+    // Lớp đại diện cho nhóm quyền
     public class GroupPermission : BaseModel
     {
         public string Title { get; set; }

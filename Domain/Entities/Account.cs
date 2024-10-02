@@ -2,6 +2,7 @@
 
 namespace Domain.Entities
 {
+    // Lớp đại diện cho tài khoản người dùng
     public class Account : BaseModel
     {
         public string Name { get; set; }

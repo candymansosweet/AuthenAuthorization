@@ -2,6 +2,7 @@
 
 namespace Domain.Entities
 {
+    // Lớp đại diện cho quyền
     public class Permission : BaseModel
     {
         public string Title { get; set; }
