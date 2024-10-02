@@ -30,6 +30,7 @@ namespace Application.Accounts.CommandHandlers
             var account = new Account
             {
                 Name = request.Name,
+                Code = request.Code,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 AssignGroup = request.GroupPermissionIds.Select(id => new AssignGroup
                 {

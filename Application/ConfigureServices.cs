@@ -10,6 +10,10 @@ namespace Application
             Assembly assembly = Assembly.GetExecutingAssembly();
             // Đăng ký MediatR với Assembly hiện tại (Application)
             services.AddAutoMapper(assembly);
+            services.AddMediatR(configuration =>
+            {
+                configuration.RegisterServicesFromAssembly(assembly);
+            });
             return services;
         }
     }

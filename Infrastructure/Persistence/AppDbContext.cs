@@ -3,21 +3,20 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Design;
-using System.Collections.Generic;
 
 namespace Infrastructure.Persistence
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-
-        }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AssignGroup> AssignGroups { get; set; }
         public DbSet<GroupPermission> GroupPermissions { get; set; }
         public DbSet<AssignPermission> AssignPermissions { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+
+        }
         // ghi đè để trước khi lưu data, cập nhật ngày tháng
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

@@ -1,13 +1,15 @@
 ﻿using Application.Accounts.Dto;
 using Application.Accounts.Queries;
 using AutoMapper;
+using Common.Models;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Accounts.QueryHandlers
 {
-    public class FilterAccountHandler : IRequestHandler<FilterAccount, List<AccountDto>>
+    public class FilterAccountHandler : IRequestHandler<FilterAccount, PaginatedList<AccountDto>>
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
@@ -18,14 +20,17 @@ namespace Application.Accounts.QueryHandlers
             _mapper = mapper;
         }
 
-        public async Task<List<AccountDto>> Handle(FilterAccount request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<AccountDto>> Handle(FilterAccount request, CancellationToken cancellationToken)
         {
-            var accounts = await _context.Accounts
+            IQueryable<Account> accounts = _context.Accounts
                 .Include(a => a.AssignGroup)
-                    .ThenInclude(ag => ag.GroupPermission)
-                .ToListAsync(cancellationToken);
+                    .ThenInclude(ag => ag.GroupPermission).AsQueryable();
 
-            return _mapper.Map<List<AccountDto>>(accounts);
+            return await PaginatedList<AccountDto>.CreateAsync(
+                _mapper.ProjectTo<AccountDto>(accounts),
+                request.PageNumber,
+                request.PageSize
+            );
         }
     }
 }

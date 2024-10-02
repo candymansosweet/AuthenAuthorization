@@ -31,11 +31,14 @@ namespace Application.Permissions.CommandHandlers
                     new[] { new ErrorDetail(nameof(request.Title), request.Title) });
             }
             permission = _mapper.Map<Permission>(request);
-            permission.AssignPermissions = request.GroupPermissionIds.Select(item => new AssignPermission()
+            if(request.GroupPermissionIds?.Count > 0)
             {
-                PermissionId = request.Id,
-                GroupPermissionId = item
-            }).ToList();
+                permission.AssignPermissions = request.GroupPermissionIds.Select(item => new AssignPermission()
+                {
+                    PermissionId = request.Id,
+                    GroupPermissionId = item
+                }).ToList();
+            }
             _context.Permissions.Update(permission);
             await _context.SaveChangesAsync(cancellationToken);
 

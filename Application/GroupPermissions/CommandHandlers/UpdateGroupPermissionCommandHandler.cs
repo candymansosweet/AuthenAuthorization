@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,27 +35,27 @@ namespace Application.GroupPermissions.CommandHandlers
 
             if (groupPermission == null)
             {
-                throw new AppException(ExceptionCode.Notfound, $"Không tìm thấy GroupPermission {request.Title}",
-                    new[] { new ErrorDetail(nameof(request.Title), request.Title) });
+                throw new AppException(ExceptionCode.Notfound, $"Không tìm thấy GroupPermission {request.Id}",
+                    new[] { new ErrorDetail(nameof(request.Id), request.Id) });
             }
-
-            groupPermission.Title = request.Title;
-            groupPermission.Description = request.Description;
-
-            var newAssignPermissions = request.PermissionIds.Select(id => new AssignPermission
+            groupPermission = _mapper.Map<GroupPermission>(request);
+            if (request.PermissionIds?.Count > 0)
             {
-                GroupPermissionId = request.Id,
-                PermissionId = id
-            }).ToList();
+                groupPermission.AssignPermissions = request.PermissionIds.Select(id => new AssignPermission
+                {
+                    GroupPermissionId = request.Id,
+                    PermissionId = id
+                }).ToList();
 
-            var newAssignGroups = request.AccountIds.Select(id => new AssignGroup
+            }
+            if (request.AccountIds?.Count > 0)
             {
-                GroupPermissionId = request.Id,
-                AccountId = id
-            }).ToList();
-
-            groupPermission.AssignPermissions = newAssignPermissions;
-            groupPermission.AssignGroups = newAssignGroups;
+                groupPermission.AssignGroups = request.AccountIds.Select(id => new AssignGroup
+                {
+                    GroupPermissionId = request.Id,
+                    AccountId = id
+                }).ToList();
+            }
 
             _context.GroupPermissions.Update(groupPermission);
             await _context.SaveChangesAsync(cancellationToken);

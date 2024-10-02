@@ -1,4 +1,5 @@
 ﻿using Application.GroupPermissions.Dto;
+using Common.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.GroupPermissions.Queries
 {
-    public class FilterGroupPermission : IRequest<List<GroupPermissionDto>>
+    public class FilterGroupPermission : BasePaginatedQuery, IRequest<PaginatedList<GroupPermissionDto>>
     {
     }
 }

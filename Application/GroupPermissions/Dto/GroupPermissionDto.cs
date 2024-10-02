@@ -1,4 +1,6 @@
-﻿using Application.Common.Mapping;
+﻿using Application.Accounts.Dto;
+using Application.Common.Mapping;
+using Application.Permissions.Dto;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -21,9 +23,9 @@ namespace Application.GroupPermissions.Dto
         {
             profile.CreateMap<GroupPermission, GroupPermissionDto>()
                 .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src =>
-                    src.AssignPermissions.Select(ap => ap.Permission).ToList()))
+                    src.AssignPermissions.Select(ap => ap.Permission)))
                 .ForMember(dest => dest.Accounts, opt => opt.MapFrom(src =>
-                    src.AssignGroups.Select(ag => ag.Account).ToList()));
+                    src.AssignGroups.Select(ag => ag.Account)));
         }
     }
 }

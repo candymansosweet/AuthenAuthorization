@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Application.Permissions.Commands
 {
-    public class UpdatePermissionCommand : IRequest<PermissionDto>, IBasicMapTo<Permission>
+    public class UpdatePermissionCommand : IRequest<PermissionDto>, IMapTo<Permission>
     {
         public int Id { get; set; }
-        public string Title { get; set; }
-        public int Code { get; set; }
-        public string Description { get; set; }
-        public List<int> GroupPermissionIds { get; set; } = new List<int>();
+        public string? Title { get; set; }
+        public string? Code { get; set; }
+        public string? Description { get; set; }
+        public List<int>? GroupPermissionIds { get; set; } = new List<int>();
     }
 }

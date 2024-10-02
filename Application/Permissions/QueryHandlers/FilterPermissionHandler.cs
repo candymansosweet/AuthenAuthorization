@@ -1,13 +1,14 @@
 ﻿using Application.Permissions.Dto;
 using Application.Permissions.Queries;
 using AutoMapper;
+using Common.Models;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Permissions.QueryHandlers
 {
-    public class FilterPermissionHandler : IRequestHandler<FilterPermission, List<PermissionDto>>
+    public class FilterPermissionHandler : IRequestHandler<FilterPermission, PaginatedList<PermissionDto>>
     {
         private AppDbContext _context;
         private readonly IMapper _mapper;
@@ -17,14 +18,20 @@ namespace Application.Permissions.QueryHandlers
             _context = context;
             _mapper = mapper;
         }
-        public async Task<List<PermissionDto>> Handle(FilterPermission request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<PermissionDto>> Handle(FilterPermission request, CancellationToken cancellationToken)
         {
-            var permissions = await _context.Permissions
+            var query = _context.Permissions.AsQueryable();
+            query = _context.Permissions
                 .Include(p => p.AssignPermissions)
-                    .ThenInclude(ap => ap.GroupPermission)
-                .ToListAsync(cancellationToken);
+                    .ThenInclude(ap => ap.GroupPermission).AsQueryable();
 
-            return _mapper.Map<List<PermissionDto>>(permissions);
+            var mappedQuery = _mapper.ProjectTo<PermissionDto>(query);
+
+            return await PaginatedList<PermissionDto>.CreateAsync(
+                mappedQuery,
+                request.PageNumber,
+                request.PageSize
+            );
         }
     }
 }

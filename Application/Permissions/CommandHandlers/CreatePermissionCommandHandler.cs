@@ -25,7 +25,6 @@ namespace Application.Permissions.CommandHandlers
         }
         public async Task<PermissionDto> Handle(CreatePermissionCommand request, CancellationToken cancellationToken)
         {
-            Permission permission = _mapper.Map<Permission>(request);
             if (_context.Permissions.Any(x => x.Title == request.Title))
             {
                 throw new AppException(
@@ -38,6 +37,7 @@ namespace Application.Permissions.CommandHandlers
                     }
                 );
             }
+            Permission permission = _mapper.Map<Permission>(request);
             permission.AssignPermissions = request.GroupPermissionIds.Select(t => new AssignPermission()
             {
                 GroupPermissionId = t

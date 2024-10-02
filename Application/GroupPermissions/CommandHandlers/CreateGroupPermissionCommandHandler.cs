@@ -5,6 +5,7 @@ using Common.Exceptions;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using MediatR;
+using System.Security;
 
 namespace Application.GroupPermissions.CommandHandlers
 {
@@ -26,20 +27,7 @@ namespace Application.GroupPermissions.CommandHandlers
                 throw new AppException(ExceptionCode.Duplicate, $"Đã tồn tại GroupPermission {request.Title}",
                     new[] { new ErrorDetail(nameof(request.Title), request.Title) });
             }
-
-            var groupPermission = new GroupPermission
-            {
-                Title = request.Title,
-                Description = request.Description,
-                AssignPermissions = request.PermissionIds.Select(id => new AssignPermission
-                {
-                    GroupPermissionId = id
-                }).ToList(),
-                AssignGroups = request.AccountIds.Select(id => new AssignGroup
-                {
-                    AccountId = id
-                }).ToList()
-            };
+            GroupPermission groupPermission = _mapper.Map<GroupPermission>(request);
 
             _context.GroupPermissions.Add(groupPermission);
             await _context.SaveChangesAsync(cancellationToken);

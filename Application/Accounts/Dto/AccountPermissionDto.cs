@@ -1,5 +1,4 @@
 ﻿using Application.Common.Mapping;
-using Application.Users.Dto;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -23,8 +22,7 @@ namespace Application.Accounts.Dto
                     src.AssignGroup
                         .SelectMany(ag => ag.GroupPermission.AssignPermissions)
                         .Select(ap => ap.Permission.Title)
-                        .Distinct()
-                        .ToList()));
+                        .Distinct()));
         }
     }
 }

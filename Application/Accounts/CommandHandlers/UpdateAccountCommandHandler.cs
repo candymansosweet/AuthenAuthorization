@@ -29,26 +29,32 @@ namespace Application.Accounts.CommandHandlers
 
             if (account == null)
             {
-                throw new AppException(ExceptionCode.Notfound, $"Không tìm thấy Account {request.Name}",
-                    new[] { new ErrorDetail(nameof(request.Name), request.Name) });
+                throw new AppException(ExceptionCode.Notfound, $"Không tìm thấy Account {request.Id}",
+                    new[] { new ErrorDetail(nameof(request.Id), request.Id) });
             }
             if (request.Name.IsNullOrEmpty())
             {
                 account.Name = request.Name;
             }
-            if(request.PasswordNew!= null)
+            if (request.PasswordNew != null)
             {
                 if (BCrypt.Net.BCrypt.Verify(request.PasswordOld, account.PasswordHash))
                 {
                     account.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.PasswordNew);
                 }
+                else
+                {
+                    throw new AppException(ExceptionCode.Invalidate, $"Nhập sai mật khẩu cũ");
+                }
             }
-            var newAssignGroups = request.GroupPermissionIds.Select(id => new AssignGroup
+            if(request.GroupPermissionIds.Count > 0)
             {
-                AccountId = request.Id,
-                GroupPermissionId = id
-            }).ToList();
-            account.AssignGroup = newAssignGroups;
+                account.AssignGroup = request.GroupPermissionIds.Select(id => new AssignGroup
+                {
+                    AccountId = request.Id,
+                    GroupPermissionId = id
+                }).ToList();
+            }
             _context.Accounts.Update(account);
             await _context.SaveChangesAsync(cancellationToken);
             return _mapper.Map<AccountDto>(account);
