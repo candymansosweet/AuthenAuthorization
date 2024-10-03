@@ -8,7 +8,7 @@
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(config =>
             {
-                config.CustomSchemaIds(type => type.FullName);
+                config.CustomSchemaIds(type => type.FullName); // config description schema 
             });
 
             services.AddRouting(options => options.LowercaseUrls = true);
