@@ -2,6 +2,7 @@
 using Application.Accounts.Queries;
 using AutoMapper;
 using Common.Exceptions;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,19 +24,23 @@ namespace Application.Accounts.QueryHandlers
             _mapper = mapper;
         }
 
-        public async Task<AccountDto> Handle(GetAccountById request, CancellationToken cancellationToken)
+        public async Task<AccountDto?> Handle(GetAccountById request, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts
-                .Include(a => a.AssignGroup)
-                    .ThenInclude(ag => ag.GroupPermission)
-                .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
+            //var account = await _context.Accounts
+            //    .Include(a => a.AccountGroupPermissions)
+            //        .ThenInclude(ag => ag.GroupPermission)
+            //        .ThenInclude(gp => gp.PermissionGroupPermissions)
+            //        .ThenInclude(pp => pp.Permission)
+            //    .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
 
+            IQueryable<Account> accountQuery = _context.Accounts.Where(a => a.Id == request.Id);
+
+            AccountDto? account = _mapper.ProjectTo<AccountDto>(accountQuery).FirstOrDefault();
             if (account == null)
             {
                 throw new AppException(ExceptionCode.Notfound, "Không tìm thấy Account");
             }
-
-            return _mapper.Map<AccountDto>(account);
+            return account;
         }
     }
 }

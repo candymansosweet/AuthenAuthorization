@@ -24,7 +24,7 @@ namespace Application.Accounts.CommandHandlers
         public async Task<AccountDto> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
         {
             var account = await _context.Accounts
-                .Include(a => a.AssignGroup)
+                .Include(a => a.AccountGroupPermissions)
                 .FirstOrDefaultAsync(a => a.Id == request.Id);
 
             if (account == null)
@@ -49,7 +49,7 @@ namespace Application.Accounts.CommandHandlers
             }
             if(request.GroupPermissionIds.Count > 0)
             {
-                account.AssignGroup = request.GroupPermissionIds.Select(id => new AssignGroup
+                account.AccountGroupPermissions = request.GroupPermissionIds.Select(id => new AccountGroupPermission
                 {
                     AccountId = request.Id,
                     GroupPermissionId = id

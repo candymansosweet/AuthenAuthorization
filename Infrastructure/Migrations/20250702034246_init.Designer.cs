@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241002085745_new")]
-    partial class @new
+    [Migration("20250702034246_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -65,7 +65,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AssignGroup", b =>
+            modelBuilder.Entity("Domain.Entities.AccountGroupPermission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -100,45 +100,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("GroupPermissionId");
 
-                    b.ToTable("AssignGroups");
-                });
-
-            modelBuilder.Entity("Domain.Entities.AssignPermission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GroupPermissionId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UpdatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupPermissionId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.ToTable("AssignPermissions");
+                    b.ToTable("AccountGroupPermission");
                 });
 
             modelBuilder.Entity("Domain.Entities.GroupPermission", b =>
@@ -219,16 +181,98 @@ namespace Infrastructure.Migrations
                     b.ToTable("Permissions");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AssignGroup", b =>
+            modelBuilder.Entity("Domain.Entities.PermissionGroupPermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GroupPermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupPermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("PermissionGroupPermission");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Token", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AccountName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Permissions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecretString")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tokens");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AccountGroupPermission", b =>
                 {
                     b.HasOne("Domain.Entities.Account", "Account")
-                        .WithMany("AssignGroup")
+                        .WithMany("AccountGroupPermissions")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.GroupPermission", "GroupPermission")
-                        .WithMany("AssignGroups")
+                        .WithMany("AccountGroupPermissions")
                         .HasForeignKey("GroupPermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -238,16 +282,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("GroupPermission");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AssignPermission", b =>
+            modelBuilder.Entity("Domain.Entities.PermissionGroupPermission", b =>
                 {
                     b.HasOne("Domain.Entities.GroupPermission", "GroupPermission")
-                        .WithMany("AssignPermissions")
+                        .WithMany("PermissionGroupPermissions")
                         .HasForeignKey("GroupPermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Permission", "Permission")
-                        .WithMany("AssignPermissions")
+                        .WithMany("PermissionGroupPermissions")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -259,19 +303,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Account", b =>
                 {
-                    b.Navigation("AssignGroup");
+                    b.Navigation("AccountGroupPermissions");
                 });
 
             modelBuilder.Entity("Domain.Entities.GroupPermission", b =>
                 {
-                    b.Navigation("AssignGroups");
+                    b.Navigation("AccountGroupPermissions");
 
-                    b.Navigation("AssignPermissions");
+                    b.Navigation("PermissionGroupPermissions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Permission", b =>
                 {
-                    b.Navigation("AssignPermissions");
+                    b.Navigation("PermissionGroupPermissions");
                 });
 #pragma warning restore 612, 618
         }

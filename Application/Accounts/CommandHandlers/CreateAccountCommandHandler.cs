@@ -32,7 +32,7 @@ namespace Application.Accounts.CommandHandlers
                 Name = request.Name,
                 Code = request.Code,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                AssignGroup = request.GroupPermissionIds.Select(id => new AssignGroup
+                AccountGroupPermissions = request.GroupPermissionIds.Select(id => new AccountGroupPermission
                 {
                     GroupPermissionId = id
                 }).ToList()

@@ -18,6 +18,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -37,7 +38,8 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
@@ -56,7 +58,8 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
@@ -69,7 +72,28 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AssignGroups",
+                name: "Tokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AccountName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Permissions = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SecretString = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<int>(type: "int", nullable: false),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tokens", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountGroupPermission",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -84,15 +108,15 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AssignGroups", x => x.Id);
+                    table.PrimaryKey("PK_AccountGroupPermission", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AssignGroups_Accounts_AccountId",
+                        name: "FK_AccountGroupPermission_Accounts_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AssignGroups_GroupPermissions_GroupPermissionId",
+                        name: "FK_AccountGroupPermission_GroupPermissions_GroupPermissionId",
                         column: x => x.GroupPermissionId,
                         principalTable: "GroupPermissions",
                         principalColumn: "Id",
@@ -100,7 +124,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AssignPermissions",
+                name: "PermissionGroupPermission",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -115,15 +139,15 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AssignPermissions", x => x.Id);
+                    table.PrimaryKey("PK_PermissionGroupPermission", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AssignPermissions_GroupPermissions_GroupPermissionId",
+                        name: "FK_PermissionGroupPermission_GroupPermissions_GroupPermissionId",
                         column: x => x.GroupPermissionId,
                         principalTable: "GroupPermissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AssignPermissions_Permissions_PermissionId",
+                        name: "FK_PermissionGroupPermission_Permissions_PermissionId",
                         column: x => x.PermissionId,
                         principalTable: "Permissions",
                         principalColumn: "Id",
@@ -131,23 +155,23 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssignGroups_AccountId",
-                table: "AssignGroups",
+                name: "IX_AccountGroupPermission_AccountId",
+                table: "AccountGroupPermission",
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssignGroups_GroupPermissionId",
-                table: "AssignGroups",
+                name: "IX_AccountGroupPermission_GroupPermissionId",
+                table: "AccountGroupPermission",
                 column: "GroupPermissionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssignPermissions_GroupPermissionId",
-                table: "AssignPermissions",
+                name: "IX_PermissionGroupPermission_GroupPermissionId",
+                table: "PermissionGroupPermission",
                 column: "GroupPermissionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssignPermissions_PermissionId",
-                table: "AssignPermissions",
+                name: "IX_PermissionGroupPermission_PermissionId",
+                table: "PermissionGroupPermission",
                 column: "PermissionId");
         }
 
@@ -155,10 +179,13 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AssignGroups");
+                name: "AccountGroupPermission");
 
             migrationBuilder.DropTable(
-                name: "AssignPermissions");
+                name: "PermissionGroupPermission");
+
+            migrationBuilder.DropTable(
+                name: "Tokens");
 
             migrationBuilder.DropTable(
                 name: "Accounts");

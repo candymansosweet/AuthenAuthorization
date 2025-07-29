@@ -3,6 +3,7 @@ using Application.GroupPermissions.Dto;
 using Application.Permissions.Dto;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,12 @@ namespace Application.Accounts.Dto
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Account, AccountDto>()
-                .ForMember(dest => dest.GroupPermissions, opt => opt.MapFrom(src =>
-                    src.AssignGroup.Select(ag => ag.GroupPermission)));
+                .ForMember(
+                    dest => dest.GroupPermissions,
+                    opt => opt.MapFrom(
+                        src => src.AccountGroupPermissions.Select(ag => ag.GroupPermission)
+                    )
+                );
         }
     }
 }
-

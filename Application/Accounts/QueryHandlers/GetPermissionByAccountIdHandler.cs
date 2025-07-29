@@ -2,6 +2,7 @@
 using Application.Accounts.Queries;
 using AutoMapper;
 using Common.Exceptions;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,19 +27,29 @@ namespace Application.Accounts.QueryHandlers
 
         public async Task<AccountPermissionDto> Handle(GetPermissionByAccountId request, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts
-                .Include(a => a.AssignGroup)
-                    .ThenInclude(ag => ag.GroupPermission)
-                    .ThenInclude(ass => ass.AssignPermissions)
-                    .ThenInclude(per => per.Permission).Distinct()
-                .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
+            //var account = await _context.Accounts
+            //    .Include(a => a.AccountGroupPermissions)
+            //        .ThenInclude(ag => ag.GroupPermission)
+            //        .ThenInclude(ass => ass.PermissionGroupPermissions)
+            //        .ThenInclude(per => per.Permission).Distinct()
+            //    .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
 
-            if (account == null)
+            //if (account == null)
+            //{
+            //    throw new AppException(ExceptionCode.Notfound, "Không tìm thấy Account");
+            //}
+
+
+            IQueryable<Account> accountQuery = _context.Accounts.Where(a => a.Id == request.Id);
+
+            AccountPermissionDto? modelDto = _mapper.ProjectTo<AccountPermissionDto>(accountQuery).FirstOrDefault();
+            if (modelDto == null)
             {
                 throw new AppException(ExceptionCode.Notfound, "Không tìm thấy Account");
             }
+            return modelDto;
 
-            return _mapper.Map<AccountPermissionDto>(account);
+            //return _mapper.Map<AccountPermissionDto>(account);
         }
     }
 }

@@ -19,8 +19,8 @@ namespace Application.Accounts.Dto
         {
             profile.CreateMap<Account, AccountPermissionDto>()
                 .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src =>
-                    src.AssignGroup
-                        .SelectMany(ag => ag.GroupPermission.AssignPermissions)
+                    src.AccountGroupPermissions
+                        .SelectMany(ag => ag.GroupPermission.PermissionGroupPermissions)
                         .Select(ap => ap.Permission.Title)
                         .Distinct()));
         }

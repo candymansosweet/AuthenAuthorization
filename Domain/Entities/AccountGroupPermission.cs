@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities
 {
-    // Lớp đại diện cho việc phân nhóm tài khoản
-    public class AssignGroup : BaseModel
+    public class AccountGroupPermission : BaseModel
     {
         public int AccountId { get; set; }
         public int GroupPermissionId { get; set; }

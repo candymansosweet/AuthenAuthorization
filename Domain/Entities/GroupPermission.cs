@@ -14,8 +14,8 @@ namespace Domain.Entities
         public string Code { get; set; }
         public string? Description { get; set; }
         [JsonIgnore]
-        public virtual List<AssignPermission> AssignPermissions { get; set; } = new List<AssignPermission>();
+        public virtual List<PermissionGroupPermission> PermissionGroupPermissions { get; set; } = new List<PermissionGroupPermission>();
         [JsonIgnore]
-        public virtual List<AssignGroup> AssignGroups { get; set; } = new List<AssignGroup>();
+        public virtual List<AccountGroupPermission> AccountGroupPermissions { get; set; } = new List<AccountGroupPermission>();
     }
 }

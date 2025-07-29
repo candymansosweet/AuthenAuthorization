@@ -22,9 +22,8 @@ namespace Application.Accounts.QueryHandlers
 
         public async Task<PaginatedList<AccountDto>> Handle(FilterAccount request, CancellationToken cancellationToken)
         {
-            IQueryable<Account> accounts = _context.Accounts
-                .Include(a => a.AssignGroup)
-                    .ThenInclude(ag => ag.GroupPermission).AsQueryable();
+            IQueryable<Account> accounts = _context.Accounts.AsQueryable();
+            
 
             return await PaginatedList<AccountDto>.CreateAsync(
                 _mapper.ProjectTo<AccountDto>(accounts),

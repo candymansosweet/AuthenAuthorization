@@ -22,7 +22,7 @@ namespace Application.Permissions.CommandHandlers
         public async Task<PermissionDto> Handle(UpdatePermissionCommand request, CancellationToken cancellationToken)
         {
             Permission? permission = await _context.Permissions
-                .Include(p => p.AssignPermissions)
+                .Include(p => p.PermissionGroupPermissions)
                 .FirstOrDefaultAsync(p => p.Id == request.Id);
 
             if (permission == null)
@@ -33,7 +33,7 @@ namespace Application.Permissions.CommandHandlers
             permission = _mapper.Map<Permission>(request);
             if(request.GroupPermissionIds?.Count > 0)
             {
-                permission.AssignPermissions = request.GroupPermissionIds.Select(item => new AssignPermission()
+                permission.PermissionGroupPermissions = request.GroupPermissionIds.Select(item => new PermissionGroupPermission()
                 {
                     PermissionId = request.Id,
                     GroupPermissionId = item

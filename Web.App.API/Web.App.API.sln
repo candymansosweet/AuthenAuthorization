@@ -12,6 +12,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "..\Domain\Domain.csproj", "{3B601623-7410-4007-8851-7682566FFBF5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "..\Infrastructure\Infrastructure.csproj", "{DF20BCD8-3018-4AEA-8310-575925B19083}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0433E8AC-4FDC-4092-8ABF-B546F1BC90F9} = {0433E8AC-4FDC-4092-8ABF-B546F1BC90F9}
+		{3B601623-7410-4007-8851-7682566FFBF5} = {3B601623-7410-4007-8851-7682566FFBF5}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unitilities", "..\Unitilities\Unitilities.csproj", "{0240E1C4-AC64-45A0-9E06-9C335D0E466C}"
 EndProject

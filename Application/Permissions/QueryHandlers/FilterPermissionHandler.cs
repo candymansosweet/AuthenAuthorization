@@ -22,7 +22,7 @@ namespace Application.Permissions.QueryHandlers
         {
             var query = _context.Permissions.AsQueryable();
             query = _context.Permissions
-                .Include(p => p.AssignPermissions)
+                .Include(p => p.PermissionGroupPermissions)
                     .ThenInclude(ap => ap.GroupPermission).AsQueryable();
 
             var mappedQuery = _mapper.ProjectTo<PermissionDto>(query);

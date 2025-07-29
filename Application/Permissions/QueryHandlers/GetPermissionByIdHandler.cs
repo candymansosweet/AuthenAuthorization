@@ -21,7 +21,7 @@ namespace Application.Permissions.QueryHandlers
         public async Task<PermissionDto> Handle(GetPermissionById request, CancellationToken cancellationToken)
         {
             var permission = await _context.Permissions
-                .Include(p => p.AssignPermissions)
+                .Include(p => p.PermissionGroupPermissions)
                     .ThenInclude(ap => ap.GroupPermission)
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 

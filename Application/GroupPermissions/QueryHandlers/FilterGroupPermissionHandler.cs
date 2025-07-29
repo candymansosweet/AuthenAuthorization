@@ -29,9 +29,9 @@ namespace Application.GroupPermissions.QueryHandlers
         {
             var query = _context.GroupPermissions.AsQueryable();
             query = _context.GroupPermissions
-                .Include(gp => gp.AssignPermissions)
+                .Include(gp => gp.PermissionGroupPermissions)
                     .ThenInclude(ap => ap.Permission)
-                .Include(gp => gp.AssignGroups)
+                .Include(gp => gp.AccountGroupPermissions)
                     .ThenInclude(ag => ag.Account);
 
             return await PaginatedList<GroupPermissionDto>.CreateAsync(

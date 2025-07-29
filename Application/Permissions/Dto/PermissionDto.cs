@@ -12,12 +12,12 @@ namespace Application.Permissions.Dto
         public string Code { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public List<GroupPermissionDto> GroupPermissions { get; set; } = new List<GroupPermissionDto>();
-        public void Mapping(Profile profile)
-        {
-            profile.CreateMap<Permission, PermissionDto>()
-                .ForMember(dest => dest.GroupPermissions, opt => opt.MapFrom(src =>
-                    src.AssignPermissions.Select(ap => ap.GroupPermission)));
-        }
+        //public List<GroupPermissionDto> GroupPermissions { get; set; } = new List<GroupPermissionDto>();
+        //public void Mapping(Profile profile)
+        //{
+        //    profile.CreateMap<Permission, PermissionDto>()
+        //        .ForMember(dest => dest.GroupPermissions, opt => opt.MapFrom(src =>
+        //            src.PermissionGroupPermissions.Select(ap => ap.GroupPermission)));
+        //}
     }
 }

@@ -26,9 +26,9 @@ namespace Application.GroupPermissions.QueryHandlers
         public async Task<GroupPermissionDto> Handle(GetGroupPermissionById request, CancellationToken cancellationToken)
         {
             var groupPermission = await _context.GroupPermissions
-                .Include(gp => gp.AssignPermissions)
+                .Include(gp => gp.PermissionGroupPermissions)
                     .ThenInclude(ap => ap.Permission)
-                .Include(gp => gp.AssignGroups)
+                .Include(gp => gp.AccountGroupPermissions)
                     .ThenInclude(ag => ag.Account)
                 .FirstOrDefaultAsync(gp => gp.Id == request.Id, cancellationToken);
 

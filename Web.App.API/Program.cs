@@ -1,7 +1,9 @@
 ﻿
 using Application;
+using Common.Models;
 using Infrastructure;
 using Web.API.Middlewares;
+using Web.App.API.Middlewares;
 
 namespace Web.App.API
 {
@@ -10,6 +12,8 @@ namespace Web.App.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
             // Add services to the container.
             builder.Services
                 .AddInfrastructure(builder.Configuration)
@@ -34,6 +38,7 @@ namespace Web.App.API
             app.UseAuthorization();
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseMiddleware<JwtMiddleware>();
             app.MapControllers();
 
             app.Run();

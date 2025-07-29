@@ -29,8 +29,8 @@ namespace Application.GroupPermissions.CommandHandlers
         public async Task<GroupPermissionDto> Handle(UpdateGroupPermissionCommand request, CancellationToken cancellationToken)
         {
             var groupPermission = await _context.GroupPermissions
-                .Include(gp => gp.AssignPermissions)
-                .Include(gp => gp.AssignGroups)
+                .Include(gp => gp.PermissionGroupPermissions)
+                .Include(gp => gp.AccountGroupPermissions)
                 .FirstOrDefaultAsync(gp => gp.Id == request.Id);
 
             if (groupPermission == null)
@@ -41,7 +41,7 @@ namespace Application.GroupPermissions.CommandHandlers
             groupPermission = _mapper.Map<GroupPermission>(request);
             if (request.PermissionIds?.Count > 0)
             {
-                groupPermission.AssignPermissions = request.PermissionIds.Select(id => new AssignPermission
+                groupPermission.PermissionGroupPermissions = request.PermissionIds.Select(id => new PermissionGroupPermission
                 {
                     GroupPermissionId = request.Id,
                     PermissionId = id
@@ -50,7 +50,7 @@ namespace Application.GroupPermissions.CommandHandlers
             }
             if (request.AccountIds?.Count > 0)
             {
-                groupPermission.AssignGroups = request.AccountIds.Select(id => new AssignGroup
+                groupPermission.AccountGroupPermissions = request.AccountIds.Select(id => new AccountGroupPermission
                 {
                     GroupPermissionId = request.Id,
                     AccountId = id

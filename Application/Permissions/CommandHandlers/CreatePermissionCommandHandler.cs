@@ -38,7 +38,7 @@ namespace Application.Permissions.CommandHandlers
                 );
             }
             Permission permission = _mapper.Map<Permission>(request);
-            permission.AssignPermissions = request.GroupPermissionIds.Select(t => new AssignPermission()
+            permission.PermissionGroupPermissions = request.GroupPermissionIds.Select(t => new PermissionGroupPermission()
             {
                 GroupPermissionId = t
             }).ToList();

@@ -11,10 +11,11 @@ namespace Infrastructure.Persistence
     public class AppDbContext : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<AssignGroup> AssignGroups { get; set; }
+        public DbSet<AccountGroupPermission> AccountGroupPermission { get; set; }
         public DbSet<GroupPermission> GroupPermissions { get; set; }
-        public DbSet<AssignPermission> AssignPermissions { get; set; }
+        public DbSet<PermissionGroupPermission> PermissionGroupPermission { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<Token> Tokens { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
@@ -29,12 +30,11 @@ namespace Infrastructure.Persistence
                 if (typeof(BaseModel).IsAssignableFrom(entityType.ClrType)) // chỉ áp dụng với các class kế thừa từ BaseModel
                 {
                     var parameter = Expression.Parameter(entityType.ClrType, "e"); // 
-                    var propertyMethod = typeof(EF).GetMethod("Property").MakeGenericMethod(typeof(bool));
+                    var propertyMethod = typeof(EF)?.GetMethod("Property")?.MakeGenericMethod(typeof(bool));
                     var isDeletedProperty = Expression.Call(propertyMethod, parameter, Expression.Constant("IsDeleted"));
                     var compareExpression = Expression.Equal(isDeletedProperty, Expression.Constant(false));
                     var lambda = Expression.Lambda(compareExpression, parameter);
                     modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
-                    //IgnoreQueryFilters
                 }
             }
         }
