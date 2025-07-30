@@ -2,6 +2,7 @@
 using Application;
 using Common.Models;
 using Infrastructure;
+using Prometheus;
 using Web.API.Middlewares;
 using Web.App.API.Middlewares;
 
@@ -23,17 +24,24 @@ namespace Web.App.API
 
             var app = builder.Build();
 
+            // Middleware để expose endpoint /metrics
+            app.UseMetricServer();
+
+
+            // Middleware để tự động đo thời gian và đếm các HTTP request
+            app.UseHttpMetrics();
+
             // Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())
             //{
-                app.UseSwagger();
+            app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 });
             //}
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
