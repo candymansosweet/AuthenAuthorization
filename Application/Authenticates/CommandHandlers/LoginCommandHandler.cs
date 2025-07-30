@@ -54,7 +54,7 @@ namespace Application.Authenticates.CommandHandlers
                     acccount.Name,
                     acccount.AccountGroupPermissions
                         .SelectMany(ag => ag.GroupPermission.PermissionGroupPermissions)
-                        .Select(ap => ap.Permission.Title)
+                        .Select(ap => ap.Permission.Code)
                         .Distinct().ToList()
                 )
             );

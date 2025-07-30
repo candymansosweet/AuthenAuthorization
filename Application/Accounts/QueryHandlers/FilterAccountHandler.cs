@@ -22,7 +22,7 @@ namespace Application.Accounts.QueryHandlers
 
         public async Task<PaginatedList<AccountDto>> Handle(FilterAccount request, CancellationToken cancellationToken)
         {
-            IQueryable<Account> accounts = _context.Accounts.AsQueryable();
+            IQueryable<Account> accounts = _context.Accounts.OrderBy(e => e.Id).AsQueryable();
             
 
             return await PaginatedList<AccountDto>.CreateAsync(

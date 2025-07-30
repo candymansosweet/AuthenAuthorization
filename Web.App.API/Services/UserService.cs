@@ -106,7 +106,7 @@ namespace Web.App.API.Services
                 Username = acc.Name,
                 Permissions = acc.AccountGroupPermissions
                     .SelectMany(ag => ag.GroupPermission.PermissionGroupPermissions)
-                    .Select(ap => ap.Permission.Title)
+                    .Select(ap => ap.Permission.Code)
                     .Distinct()
                     .ToList(),
             };
