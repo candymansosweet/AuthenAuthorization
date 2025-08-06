@@ -26,6 +26,7 @@ namespace Web.App.API.Middlewares
                 context.Items[ContextItems.UserId] = userInfor.AccountId;
                 context.Items[ContextItems.Username] = userInfor.AccountName;
                 context.Items[ContextItems.Permissions] = userInfor.Permissions;
+                context.Items[ContextItems.Jti] = userInfor.Jti;
             }
             await _next(context);
         }

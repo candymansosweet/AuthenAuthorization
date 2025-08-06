@@ -2,6 +2,8 @@
 using Application;
 using Common.Models;
 using Infrastructure;
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Prometheus;
 using Web.API.Middlewares;
 using Web.App.API.Middlewares;
@@ -22,8 +24,18 @@ namespace Web.App.API
                 .AddWebAPI();
 
 
-            var app = builder.Build();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
 
+            var app = builder.Build();
+            app.UseCors("AllowAll");
             // Middleware để expose endpoint /metrics
             app.UseMetricServer();
 
@@ -47,8 +59,15 @@ namespace Web.App.API
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseMiddleware<JwtMiddleware>();
+            app.UseMiddleware<JwtBlacklistMiddleware>();
+
             app.MapControllers();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.Migrate();
+            }
             app.Run();
         }
     }

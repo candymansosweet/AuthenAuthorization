@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Application.Authenticates.CommandHandlers
 {
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, string>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginDto>
     {
         private readonly AppDbContext _context;
         private readonly IJwtTokenService _jwtTokenService;
@@ -31,7 +31,7 @@ namespace Application.Authenticates.CommandHandlers
             _context = context;
             _jwtTokenService = jwtTokenService;
         }
-        public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<LoginDto> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             Account? acccount = await _context.Accounts         
                 .Include(a => a.AccountGroupPermissions)
@@ -46,8 +46,8 @@ namespace Application.Authenticates.CommandHandlers
             // check password
             if (acccount == null || !BCrypt.Net.BCrypt.Verify(request.Password, acccount.PasswordHash))
                 throw new AppException(ExceptionCode.Invalidate, "Username or password is incorrect");
-
-            return _jwtTokenService.GenerateToken(
+            LoginDto loginDto = new LoginDto();
+            loginDto.Token = _jwtTokenService.GenerateToken(
                 new ClaimDto(
                     request.SecretString,
                     acccount.Id.ToString(),
@@ -58,6 +58,7 @@ namespace Application.Authenticates.CommandHandlers
                         .Distinct().ToList()
                 )
             );
+            return loginDto;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Common.Models;
 using Common.Services.JwtTokenService;
+using Common.Services.TokenBlacklist;
 using Microsoft.OpenApi.Models;
 using Web.App.API.Services;
 
@@ -16,6 +17,7 @@ namespace Web.App.API
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IJwtTokenService, JwtTokenService>();
+            services.AddSingleton<ITokenBlacklist, InMemoryTokenBlacklist>();
 
             services.AddControllers();
             services.AddEndpointsApiExplorer();

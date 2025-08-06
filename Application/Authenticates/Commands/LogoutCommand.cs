@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace Application.Authenticates.Commands
 {
-    public class LoginCommand: IRequest<LoginDto>
+    public class LogoutCommand: IRequest<LogoutDto>
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string SecretString { get; set; }
+        public string Token { get; set; }
     }
 }
